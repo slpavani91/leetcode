@@ -21,51 +21,42 @@ Explanation: After calling your function, the input array is modified to: [1,2,3
 
 
 class Solution {
-    public void duplicateZeros(int[] arr) {     
-     int N = arr.length;
-     
-    // Find the count of
-    // total number of zeros
-    int cnt = count(arr, 0);
-     
-    // Variable to store index
-    // where elements will be
-    // written in the final array
-    int write_idx = N + cnt - 1;
-     
-    // Variable to point the current index
-    int curr = N - 1;
-     
-    while (curr >= 0 && write_idx >= 0)
-    {
-         
-        // Keep the current element
-        // to its correctposition, if
-        // that is within teh size N
-        if (write_idx < N)
-            arr[write_idx] = arr[curr];
-     
-        write_idx -= 1;
-     
-        // Check if the current element is also
-        // zero then again write its duplicate
-        if (arr[curr] == 0)
-        {
-            if (write_idx < N)
-                arr[write_idx] = 0;
-                 
-            write_idx -= 1;
+    public void duplicateZeros(int[] arr) {    
+        int duplicateZeros = 0;
+        int length = arr.length - 1;
+
+        // Find the number of zeros to be duplicated
+        // Stopping when left points beyond the last element in the original array
+        // which would be part of the modified array
+        for (int left = 0; left <= length - duplicateZeros; left++) {
+
+            // Count the zeros
+            if (arr[left] == 0) {
+
+                // Edge case: This zero can't be duplicated. We have no more space,
+                // as left is pointing to the last element which could be included  
+                if (left == length - duplicateZeros) {
+                    // For this zero we just copy it without duplication.
+                    arr[length] = 0;
+                    length -= 1;
+                    break;
+                }
+                duplicateZeros++;
+            }
         }
-        --curr;
-    }
-   }
-    static int count(int []arr, int num)
-    {
-    int ans = 0;
-    for(int i : arr)
-     
-       if(i == num)
-          ans++;
-    return ans;
-   }
+
+        // Start backwards from the last element which would be part of new array.
+        int last = length - duplicateZeros;
+
+        // Copy zero twice, and non zero once.
+        for (int i = last; i >= 0; i--) {
+            if (arr[i] == 0) {
+                arr[i + duplicateZeros] = 0;
+                duplicateZeros--;
+                arr[i + duplicateZeros] = 0;
+            } else {
+                arr[i + duplicateZeros] = arr[i];
+            }
+        }
+    }        
 }
